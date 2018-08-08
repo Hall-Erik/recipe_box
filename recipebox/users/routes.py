@@ -2,7 +2,7 @@ from flask import render_template, Blueprint, redirect, url_for, flash, request
 from flask_login import login_user, current_user, logout_user, login_required
 from recipebox import db, bcrypt
 from recipebox.models import User
-from recipebox.users.forms import RegistrationForm, LoginForm
+from recipebox.users.forms import RegistrationForm, LoginForm, UpdateAccountForm
 
 users = Blueprint('users', __name__)
 
@@ -39,7 +39,16 @@ def logout():
 	logout_user()
 	return redirect(url_for('main.home'))
 
-@users.route('/account')
+@users.route('/account', methods=['POST', 'GET'])
 @login_required
 def account():
-	return render_template('users/account.html', title='Account', user=current_user)
+	form = UpdateAccountForm()
+	if form.validate_on_submit():
+		current_user.username = form.username.data
+		current_user.email = form.email.data
+		db.session.commit()
+		flash("Your account has been update!", 'success')
+		return redirect(url_for('users.account'))
+	form.username.data = current_user.username
+	form.email.data = current_user.email
+	return render_template('users/account.html', title='Account', form=form)
