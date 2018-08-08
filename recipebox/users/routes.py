@@ -51,4 +51,5 @@ def account():
 		return redirect(url_for('users.account'))
 	form.username.data = current_user.username
 	form.email.data = current_user.email
-	return render_template('users/account.html', title='Account', form=form)
+	profile_pic = url_for('static', filename='profile_pics/' + current_user.image_file)
+	return render_template('users/account.html', title='Account', form=form, profile_pic=profile_pic)

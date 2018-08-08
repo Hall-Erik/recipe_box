@@ -36,7 +36,7 @@ class UpdateAccountForm(FlaskForm):
 							validators=[DataRequired(), Length(max=20)])
 	email = StringField('Email',
 							validators=[DataRequired(), Email()])
-	submit = SubmitField('Sign Up')
+	submit = SubmitField('Update Account')
 
 	def validate_username(self, username):
 		user = User.query.filter_by(username=username.data).first()
