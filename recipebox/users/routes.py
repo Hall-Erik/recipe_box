@@ -3,6 +3,7 @@ from flask_login import login_user, current_user, logout_user, login_required
 from recipebox import db, bcrypt
 from recipebox.models import User
 from recipebox.users.forms import RegistrationForm, LoginForm, UpdateAccountForm
+from recipebox.users.utils import save_picture
 
 users = Blueprint('users', __name__)
 
@@ -44,10 +45,13 @@ def logout():
 def account():
 	form = UpdateAccountForm()
 	if form.validate_on_submit():
+		if form.picture.data:
+			picture = save_picture(form.picture.data)
+			current_user.image_file = picture
 		current_user.username = form.username.data
 		current_user.email = form.email.data
 		db.session.commit()
-		flash("Your account has been update!", 'success')
+		flash("Your account has been updated!", 'success')
 		return redirect(url_for('users.account'))
 	form.username.data = current_user.username
 	form.email.data = current_user.email
