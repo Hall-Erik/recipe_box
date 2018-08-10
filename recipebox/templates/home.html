@@ -1,4 +1,7 @@
 {% extends "layout.html" %}
 {% block content %}
 	<h1>Home page</h1>
+	{% for recipe in recipes %}
+		<p>{{ recipe }}</p>
+	{% endfor %}
 {% endblock content %}

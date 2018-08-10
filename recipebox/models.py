@@ -24,8 +24,8 @@ class Recipe(db.Model):
 	title = db.Column(db.String(100), nullable=False)
 	description = db.Column(db.Text)
 	date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-	directions = db.relationship('Direction', backref='recipe', lazy=True)
-	ingredient = db.relationship('Ingredient', backref='recipe', lazy=True)
+	directions = db.relationship('Direction', backref='recipe', lazy=True, cascade='delete')
+	ingredient = db.relationship('Ingredient', backref='recipe', lazy=True, cascade='delete')
 
 	user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
