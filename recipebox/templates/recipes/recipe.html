@@ -1,0 +1,37 @@
+{% extends "layout.html" %}
+{% block content %}
+	<div class="content-section">
+		<div class="row">
+			<div class="col-7">
+				<h2>{{ recipe.title }}</h2>
+				<img src="{{ recipe_pic }}" />
+			</div>
+			<div class="col-2">
+				<p>User: {{ recipe.author.username }}</p>
+			</div>
+		</div>
+		<div class="row">
+			<p>{{ recipe.description }}</p>
+		</div>
+		<div class="row">
+			<h3>Ingredients</h3>
+		</div>
+		<div class="row">
+			<ul>
+				{% for ingredient in recipe.ingredients %}
+					<li>{{ ingredient.content }}</li>
+				{% endfor %}
+			</ul>
+		</div>
+		<div class="row">
+			<h3>Directions</h3>
+		</div>	
+		<div class="row">
+			<ol>
+				{% for direction in recipe.directions %}
+					<li>{{ direction.content }}</li>
+				{% endfor %}
+			</ol>
+		</div>
+	</div>
+{% endblock content %}

@@ -1,13 +1,19 @@
 {% extends "layout.html" %}
 {% block content %}
 	<h1>Home page</h1>
+	<div class="row">
 	{% for recipe in recipes %}
-		<h4>{{ recipe }}</h4>
-		{% for ingredient in recipe.ingredients %}
-			<p>{{ ingredient }}</p>
-		{% endfor %}
-		{% for direction in recipe.directions %}
-			<p>{{ direction }}</p>
-		{% endfor %}
+	<div class="col-sm-4">
+			<div class="card">
+				<div class="card-body">
+					{% if recipe.image_file %}
+						<img class="card-img-top" src="{{ url_for('static', filename='recipe_pics/' + recipe.image_file) }}" />
+					{% endif %}
+					<h4 class="card-title"><a href="{{ url_for('recipes.recipe', recipe_id=recipe.id )}}">{{ recipe.title }}</a></h4>
+					<p class="card-text">{{ recipe.description }}</p>
+				</div>
+			</div>
+		</div>
 	{% endfor %}
+	</div>
 {% endblock content %}
