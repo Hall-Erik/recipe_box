@@ -2,6 +2,12 @@
 {% block content %}
 	<h1>Home page</h1>
 	{% for recipe in recipes %}
-		<p>{{ recipe }}</p>
+		<h4>{{ recipe }}</h4>
+		{% for ingredient in recipe.ingredients %}
+			<p>{{ ingredient }}</p>
+		{% endfor %}
+		{% for direction in recipe.directions %}
+			<p>{{ direction }}</p>
+		{% endfor %}
 	{% endfor %}
 {% endblock content %}
