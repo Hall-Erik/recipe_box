@@ -2,13 +2,15 @@
 {% block content %}
 	<div class="content-section">
 		<div class="row">
-			<div class="col-7">
-				<h2>{{ recipe.title }}</h2>
-				<img src="{{ recipe_pic }}" />
-			</div>
-			<div class="col-2">
-				<p>User: {{ recipe.author.username }}</p>
-			</div>
+			<h2>{{ recipe.title }}</h2>
+			{% if recipe.image_file %}
+				</div>
+				<div class="row">
+					<img src="{{ url_for('static', filename='recipe_pics/' + recipe.image_file) }}" />
+			{% endif %}
+		</div>
+		<div class="row">
+			<p>User: {{ recipe.author.username }}</p>
 		</div>
 		<div class="row">
 			<p>{{ recipe.description }}</p>

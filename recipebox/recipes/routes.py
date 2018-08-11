@@ -39,5 +39,4 @@ def create_recipe():
 @recipes.route('/recipe/<int:recipe_id>')
 def recipe(recipe_id):
 	recipe = Recipe.query.get_or_404(recipe_id)
-	recipe_pic = url_for('static', filename='recipe_pics/' + recipe.image_file)
-	return render_template('recipes/recipe.html', title=recipe.title, recipe=recipe, recipe_pic=recipe_pic)
+	return render_template('recipes/recipe.html', title=recipe.title, recipe=recipe)
