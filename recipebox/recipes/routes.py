@@ -56,6 +56,40 @@ def edit_recipe(recipe_id):
 		abort(403)
 	form = EditRecipeForm(obj=recipe)
 	if form.validate_on_submit():
+		recipe.title = form.title.data
+		recipe.description = form.description.data
+		if form.picture.data:
+			picture = save_picture(form.picture.data)
+			recipe.image_file = picture
+		
+		db_ing = [ingredient.content for ingredient in recipe.ingredients]
+		form_ing = [ingredient.data for ingredient in form.ingredients if ingredient.data != ""]
+		old_ing = set(db_ing) - set(form_ing)
+		new_ing = set(form_ing) - set(db_ing)
+
+		for ingredient in recipe.ingredients:
+			if ingredient.content in old_ing:
+				db.session.delete(ingredient)
+
+		for ingredient in new_ing:
+			i = Ingredient(content=ingredient, recipe=recipe)
+			db.session.add(i)
+
+		db_dir = [direction.content for direction in recipe.directions]
+		form_dir = [direction.data for direction in form.directions if direction.data != ""]
+		old_dir = set(db_dir) - set(form_dir)
+		new_dir = set(form_dir) - set(db_dir)
+
+		for direction in recipe.directions:
+			if direction.content in old_dir:
+				db.session.delete(direction)
+
+		for direction in new_dir:
+			d = Direction(content=direction, recipe=recipe)
+			db.session.add(d)
+		
+		# db.session.add(recipe)
+		db.session.commit()
 		return redirect(url_for('recipes.recipe', recipe_id=recipe.id))
 	# form.title.data = recipe.title
 	# form.description.data = recipe.description
