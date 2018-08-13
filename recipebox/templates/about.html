@@ -1,4 +1,8 @@
 {% extends "layout.html" %}
 {% block content %}
-	<h1>About page</h1>
+	<div class="article">
+		<h2>About</h2>
+		<p>recipe_box is a place for you to share and find new recipes, but it's mostly here so I can practice my programming skills.</p>
+		<p>Feel free to <a href="{{ url_for('users.register') }}">create an account</a> and start sharing.</p>
+	</div>
 {% endblock content %}
