@@ -2,13 +2,21 @@
 {% block content %}
 	<div class="content-section">
 		<div class="row">
-			<h2>{{ recipe.title }}</h2>
-			{% if recipe.image_file %}
-				</div>
-				<div class="row">
-					<img src="{{ url_for('static', filename='recipe_pics/' + recipe.image_file) }}" />
+			<div class="col-sm-10">
+				<h2>{{ recipe.title }}</h2>
+			</div>
+			{% if recipe.author == current_user %}
+			<div class="ml-3">
+				<a class="btn btn-info" href="#">Edit</a>
+				<button class="btn btn-danger" data-toggle="modal" data-target="#deleteModal">Delete</button>
+			</div>
 			{% endif %}
 		</div>
+		{% if recipe.image_file %}
+			<div class="row">
+				<img src="{{ url_for('static', filename='recipe_pics/' + recipe.image_file) }}" />
+			</div>
+		{% endif %}
 		<div class="row">
 			<p>User: {{ recipe.author.username }}</p>
 		</div>
@@ -36,4 +44,24 @@
 			</ol>
 		</div>
 	</div>
+
+    <!-- Modal -->
+  <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteModalLabel">Delete Recipe?</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <form action="{{ url_for('recipes.delete_recipe', recipe_id=recipe.id) }}" method="POST">
+            <input class="btn btn-danger" type="submit" value="Delete">
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
 {% endblock content %}
