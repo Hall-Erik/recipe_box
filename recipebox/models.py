@@ -40,7 +40,7 @@ class Direction(db.Model):
 	recpie_id = db.Column(db.Integer, db.ForeignKey('recipe.id'), nullable=False)
 
 	def __repr__(self):
-		return f"Direction('{self.content}')"
+		return self.content
 
 class Ingredient(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
@@ -49,4 +49,4 @@ class Ingredient(db.Model):
 	recpie_id = db.Column(db.Integer, db.ForeignKey('recipe.id'), nullable=False)
 
 	def __repr__(self):
-		return f"Ingredient('{self.content}')"
+		return self.content

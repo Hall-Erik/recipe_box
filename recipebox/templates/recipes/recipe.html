@@ -7,7 +7,7 @@
 			</div>
 			{% if recipe.author == current_user %}
 			<div class="ml-3">
-				<a class="btn btn-info" href="#">Edit</a>
+				<a class="btn btn-info" href="{{ url_for('recipes.edit_recipe', recipe_id=recipe.id) }}">Edit</a>
 				<button class="btn btn-danger" data-toggle="modal" data-target="#deleteModal">Delete</button>
 			</div>
 			{% endif %}

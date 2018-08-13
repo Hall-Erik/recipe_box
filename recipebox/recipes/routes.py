@@ -2,7 +2,7 @@ from flask import (Blueprint, render_template, flash,
 					redirect, url_for, abort)
 from flask_login import current_user, login_required
 from recipebox import db
-from recipebox.recipes.forms import CreateRecipeForm
+from recipebox.recipes.forms import CreateRecipeForm, EditRecipeForm
 from recipebox.recipes.utils import save_picture
 from recipebox.models import Recipe, Ingredient, Direction
 
@@ -47,3 +47,18 @@ def delete_recipe(recipe_id):
 	db.session.commit()
 	flash('Your recipe has been deleted!', 'success')
 	return redirect(url_for('main.home'))
+
+@recipes.route('/recipe/<int:recipe_id>/edit', methods=['POST', 'GET'])
+@login_required
+def edit_recipe(recipe_id):
+	recipe = Recipe.query.get_or_404(recipe_id)
+	if recipe.author != current_user:
+		abort(403)
+	form = EditRecipeForm(obj=recipe)
+	if form.validate_on_submit():
+		return redirect(url_for('recipes.recipe', recipe_id=recipe.id))
+	# form.title.data = recipe.title
+	# form.description.data = recipe.description
+	# form.ingredients = recipe.ingredients
+
+	return render_template('recipes/edit_recipe.html', title="Update Recipe", form=form, ing_len=len(recipe.ingredients), dir_len=len(recipe.directions))
