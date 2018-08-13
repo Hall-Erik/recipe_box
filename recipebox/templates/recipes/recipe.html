@@ -18,7 +18,7 @@
 			</div>
 		{% endif %}
 		<div class="row">
-			<p>User: {{ recipe.author.username }}</p>
+			<p>User: <a href="{{ url_for('users.user_recipes', user_id=recipe.author.id) }}">{{ recipe.author.username }}</a></p>
 		</div>
 		<div class="row">
 			<p>{{ recipe.description }}</p>

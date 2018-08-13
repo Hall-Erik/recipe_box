@@ -57,3 +57,8 @@ def account():
 	form.email.data = current_user.email
 	profile_pic = url_for('static', filename='profile_pics/' + current_user.image_file)
 	return render_template('users/account.html', title='Account', form=form, profile_pic=profile_pic)
+
+@users.route('/users/<int:user_id>/recipes')
+def user_recipes(user_id):
+	user = User.query.get_or_404(user_id)
+	return render_template('home.html', title=f"{user.username}'s recipes", recipes=user.recipes)
