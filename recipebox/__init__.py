@@ -23,11 +23,11 @@ def create_app(config_class=Config):
 	from recipebox.users.routes import users
 	from recipebox.recipes.routes import recipes
 	from recipebox.main.routes import main
-	# from recipebox.errors.handlers import errors
+	from recipebox.errors.handlers import errors
 
 	app.register_blueprint(users)
 	app.register_blueprint(recipes)
 	app.register_blueprint(main)
-	# app.register_blueprint(errors)
+	app.register_blueprint(errors)
 
 	return app
