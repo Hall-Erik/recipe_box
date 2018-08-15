@@ -2,8 +2,9 @@ from flask import render_template, Blueprint, redirect, url_for, flash, request
 from flask_login import login_user, current_user, logout_user, login_required
 from recipebox import db, bcrypt
 from recipebox.models import User
-from recipebox.users.forms import RegistrationForm, LoginForm, UpdateAccountForm
-from recipebox.users.utils import save_picture
+from recipebox.users.forms import (RegistrationForm, LoginForm, UpdateAccountForm,
+									RequestResetForm, ResetPasswordForm)
+from recipebox.users.utils import save_picture, send_reset_email
 
 users = Blueprint('users', __name__)
 
@@ -62,3 +63,32 @@ def account():
 def user_recipes(user_id):
 	user = User.query.get_or_404(user_id)
 	return render_template('home.html', title=f"{user.username}'s recipes", recipes=user.recipes)
+
+@users.route('/reset_password', methods=['POST', 'GET'])
+def reset_request():
+	if current_user.is_authenticated:
+		return redirect(url_for('main.home'))
+	form = RequestResetForm()
+	if form.validate_on_submit():
+		user = User.query.filter_by(email=form.email.data).first()
+		send_reset_email(user)
+		flash('An email has been sent with instructions to reset your password.', 'info')
+		return redirect(url_for('users.login'))
+	return render_template('users/reset_request.html', title='Reset Password', form=form)
+
+@users.route('/reset_password/<token>', methods=['POST', 'GET'])
+def reset_token(token):
+	if current_user.is_authenticated:
+		return redirect(url_for('main.home'))
+	user = User.verify_reset_token(token)
+	if user is None:
+		flash('This is an invalid token.', 'warning')
+		return redirect(url_for('users.reset_request'))
+	form = ResetPasswordForm()
+	if form.validate_on_submit():
+		hashed_pw = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+		user.password = hashed_pw
+		db.session.commit()
+		flash('Your password has been updated!', 'success')
+		return redirect(url_for('users.login'))
+	return render_template('users/reset_token.html', title='Reset Password', form=form)

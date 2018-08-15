@@ -35,8 +35,7 @@ class LoginForm(FlaskForm):
 class UpdateAccountForm(FlaskForm):
 	username = StringField('Username',
 							validators=[DataRequired(), Length(max=20)])
-	email = StringField('Email',
-							validators=[DataRequired(), Email()])
+	email = StringField('Email', validators=[DataRequired(), Email()])
 	picture = FileField('Update Profile Picture', 
 							validators=[FileAllowed(['jpg', 'png'])])
 	submit = SubmitField('Update Account')
@@ -50,3 +49,18 @@ class UpdateAccountForm(FlaskForm):
 		user = User.query.filter_by(email=email.data).first()
 		if user and user != current_user:
 			raise ValidationError('There is already a user associated with that email. Please try again.')
+
+class RequestResetForm(FlaskForm):
+	email = StringField('Email', validators=[DataRequired(), Email()])
+	submit = SubmitField('Request Password Reset')
+
+	def validate_email(self, email):
+		user = User.query.filter_by(email=email.data).first()
+		if user is None:
+			raise ValidationError('There is no email associated with that email.')
+
+class ResetPasswordForm(FlaskForm):
+	password = PasswordField('Password', validators=[DataRequired()])
+	confirm_password = PasswordField('Confirm Password',
+							validators=[DataRequired(), EqualTo('password')])
+	submit = SubmitField('Reset Password')

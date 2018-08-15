@@ -1,6 +1,8 @@
 import secrets, os
 from PIL import Image
-from flask import current_app
+from flask import current_app, url_for
+from flask_mail import Message
+from recipebox import mail
 
 def save_picture(form_picture):
 	rand_hex = secrets.token_hex(8)
@@ -12,3 +14,15 @@ def save_picture(form_picture):
 	i.thumbnail(output_size)
 	i.save(picture_path)
 	return picture_filename
+
+def send_reset_email(user):
+	token = user.get_reset_token()
+	msg = Message('Password Reset Request Do Not Reply',
+			sender='noreply@recipebox.com',
+			recipients=[user.email])
+	msg.body = f'''To reset your password, visit the link below:
+{url_for('users.reset_token', token=token, _external=True)}
+
+If you did not make this request, ignore this email and nothing will happen.
+'''
+	mail.send(msg)
