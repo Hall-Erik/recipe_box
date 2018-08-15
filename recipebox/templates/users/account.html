@@ -11,7 +11,7 @@
 		<form method="POST" action="" enctype="multipart/form-data">
 			{{ form.hidden_tag() }}
 			<fieldset class="form-group">
-				<legend class="border-bottom mb-4">Account</legend>
+				<legend class="border-bottom mb-4">Account Info</legend>
 				<div class="form-group">
 					{{ form.username.label(class="form-control-label") }}
 					{% if form.username.errors %}
@@ -51,6 +51,54 @@
 					{{ form.submit(class="btn btn-outline-info") }}
 				</div>	
 			</fieldset>	
+		</form>
+		<form method="POST" action="{{ url_for('users.update_password') }}">
+			{{ pw_form.hidden_tag() }}
+			<fieldset class="form-group">
+				<legend class="border-bottom mb-4">Update Password</legend>
+				<div class="form-group">
+                    {{ pw_form.old_password.label(class="form-control-label") }}
+                    {% if pw_form.old_password.errors %}
+                        {{ pw_form.old_password(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in pw_form.old_password.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ pw_form.old_password(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+				<div class="form-group">
+                    {{ pw_form.password.label(class="form-control-label") }}
+                    {% if pw_form.password.errors %}
+                        {{ pw_form.password(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in pw_form.password.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ pw_form.password(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ pw_form.confirm_password.label(class="form-control-label") }}
+                    {% if pw_form.confirm_password.errors %}
+                        {{ pw_form.confirm_password(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in pw_form.confirm_password.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ pw_form.confirm_password(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                	{{ pw_form.submit(class="btn btn-outline-info") }}
+            	</div>
+            </fieldset>
 		</form>		
 	</div>
 {% endblock content %}

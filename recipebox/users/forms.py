@@ -50,6 +50,13 @@ class UpdateAccountForm(FlaskForm):
 		if user and user != current_user:
 			raise ValidationError('There is already a user associated with that email. Please try again.')
 
+class UpdatePasswordForm(FlaskForm):
+	old_password = PasswordField('Current Password', validators=[DataRequired()])
+	password = PasswordField('Password', validators=[DataRequired()])
+	confirm_password = PasswordField('Confirm Password',
+							validators=[DataRequired(), EqualTo('password')])
+	submit = SubmitField('Change Password')
+
 class RequestResetForm(FlaskForm):
 	email = StringField('Email', validators=[DataRequired(), Email()])
 	submit = SubmitField('Request Password Reset')
@@ -63,4 +70,4 @@ class ResetPasswordForm(FlaskForm):
 	password = PasswordField('Password', validators=[DataRequired()])
 	confirm_password = PasswordField('Confirm Password',
 							validators=[DataRequired(), EqualTo('password')])
-	submit = SubmitField('Reset Password')
+	submit = SubmitField('Change Password')

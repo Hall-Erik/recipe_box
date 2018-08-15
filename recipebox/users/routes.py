@@ -2,8 +2,9 @@ from flask import render_template, Blueprint, redirect, url_for, flash, request
 from flask_login import login_user, current_user, logout_user, login_required
 from recipebox import db, bcrypt
 from recipebox.models import User
-from recipebox.users.forms import (RegistrationForm, LoginForm, UpdateAccountForm,
-									RequestResetForm, ResetPasswordForm)
+from recipebox.users.forms import (RegistrationForm, LoginForm, 
+								UpdateAccountForm, UpdatePasswordForm,
+								RequestResetForm, ResetPasswordForm)
 from recipebox.users.utils import save_picture, send_reset_email
 
 users = Blueprint('users', __name__)
@@ -54,10 +55,25 @@ def account():
 		db.session.commit()
 		flash("Your account has been updated!", 'success')
 		return redirect(url_for('users.account'))
+	pw_form = UpdatePasswordForm()
 	form.username.data = current_user.username
 	form.email.data = current_user.email
 	profile_pic = url_for('static', filename='profile_pics/' + current_user.image_file)
-	return render_template('users/account.html', title='Account', form=form, profile_pic=profile_pic)
+	return render_template('users/account.html', title='Account', form=form, profile_pic=profile_pic, pw_form=pw_form)
+
+@users.route('/update_password', methods=['POST'])
+@login_required
+def update_password():
+	form = UpdatePasswordForm()
+	if form.validate_on_submit():
+		if bcrypt.check_password_hash(current_user.password, form.old_password.data):
+			hashed_pw = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+			current_user.password = hashed_pw
+			db.session.commit()
+			flash('Your password has been updated!', 'success')
+			return redirect(url_for('users.account'))
+		flash('Your current password does not match. Please try again!', 'danger')
+	return redirect(url_for('users.account'))
 
 @users.route('/users/<int:user_id>/recipes')
 def user_recipes(user_id):
