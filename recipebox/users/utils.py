@@ -1,19 +1,10 @@
-import secrets, os
-from PIL import Image
-from flask import current_app, url_for
+from flask import url_for
 from flask_mail import Message
 from recipebox import mail
+import recipebox.utils as utils
 
 def save_picture(form_picture):
-	rand_hex = secrets.token_hex(8)
-	_, f_ext = os.path.splitext(form_picture.filename)
-	picture_filename = rand_hex + f_ext
-	picture_path = os.path.join(current_app.root_path, 'static/profile_pics', picture_filename)
-	output_size = (150, 150)
-	i = Image.open(form_picture)
-	i.thumbnail(output_size)
-	i.save(picture_path)
-	return picture_filename
+	return utils.save_picture(form_picture=form_picture, path='static/profile_pics', output_size=(150,150))
 
 def send_reset_email(user):
 	token = user.get_reset_token()
