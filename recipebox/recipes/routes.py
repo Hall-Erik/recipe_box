@@ -13,23 +13,27 @@ recipes = Blueprint('recipes', __name__)
 def create_recipe():
 	form = CreateRecipeForm()
 	if form.validate_on_submit():
-		recipe = Recipe(title=form.title.data, description=form.description.data, user_id=current_user.id)
+		recipe = Recipe(title=form.title.data,
+						description=form.description.data,
+						cook_time=form.cook_time.data,
+						user_id=current_user.id)
 		if form.picture.data:
 			picture = save_picture(form.picture.data)
 			recipe.image_file = picture
 		db.session.add(recipe)
 		db.session.commit()
 		for ingredient in form.ingredients:
-			i = Ingredient(content=ingredient.data, recipe=recipe)
-			db.session.add(i)
-			db.session.commit()
+			if ingredient.data != "":
+				i = Ingredient(content=ingredient.data, recipe=recipe)
+				db.session.add(i)
+				db.session.commit()
 		for direction in form.directions:
-			d = Direction(content=direction.data, recipe=recipe)
-			db.session.add(d)
-			db.session.commit()
+			if direction.data != "":
+				d = Direction(content=direction.data, recipe=recipe)
+				db.session.add(d)
+				db.session.commit()
 		flash('Your recipe has been added!', 'success')
 		return redirect(url_for('main.home'))
-	print(form.errors)
 	return render_template('recipes/create_recipe.html', title="Create Recipe", form=form)
 
 @recipes.route('/recipe/<int:recipe_id>')
@@ -58,6 +62,7 @@ def edit_recipe(recipe_id):
 	if form.validate_on_submit():
 		recipe.title = form.title.data
 		recipe.description = form.description.data
+		recipe.cook_time = form.cook_time.data
 		if form.picture.data:
 			picture = save_picture(form.picture.data)
 			recipe.image_file = picture
@@ -87,12 +92,8 @@ def edit_recipe(recipe_id):
 		for direction in new_dir:
 			d = Direction(content=direction, recipe=recipe)
 			db.session.add(d)
-		
-		# db.session.add(recipe)
+
 		db.session.commit()
 		return redirect(url_for('recipes.recipe', recipe_id=recipe.id))
-	# form.title.data = recipe.title
-	# form.description.data = recipe.description
-	# form.ingredients = recipe.ingredients
 
 	return render_template('recipes/edit_recipe.html', title="Update Recipe", form=form, ing_len=len(recipe.ingredients), dir_len=len(recipe.directions))

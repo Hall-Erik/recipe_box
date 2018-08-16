@@ -18,13 +18,20 @@
 			</div>
 		{% endif %}
 		<div class="row">
-			<p>User: <a href="{{ url_for('users.user_recipes', user_id=recipe.author.id) }}">{{ recipe.author.username }}</a></p>
+			<small class="text-muted">User: <a href="{{ url_for('users.user_recipes', user_id=recipe.author.id) }}">{{ recipe.author.username }}</a></small>
+		</div>
+		<div class="row">
+			<small class="text-muted">
+				Cook time: {% if recipe.cook_time %}{{ recipe.cook_time }}{% else %}?{% endif %} minutes
+			</small>
 		</div>
 		<div class="row">
 			<p>{{ recipe.description }}</p>
 		</div>
 		<div class="row">
-			<h3>Ingredients</h3>
+			{% if recipe.ingredients|length > 0 %}
+				<h3>Ingredients</h3>
+			{% endif %}
 		</div>
 		<div class="row">
 			<ul>
@@ -34,7 +41,9 @@
 			</ul>
 		</div>
 		<div class="row">
-			<h3>Directions</h3>
+			{% if recipe.directions|length > 0 %}
+				<h3>Directions</h3>
+			{% endif %}
 		</div>	
 		<div class="row">
 			<ol>

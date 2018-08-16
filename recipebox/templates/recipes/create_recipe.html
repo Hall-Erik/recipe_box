@@ -42,6 +42,20 @@
 					{% endif %}
 				</div>
 				<div class="form-group">
+					{{ form.cook_time.label(class="form-control-label") }}
+
+					{% if form.cook_time.errors %}
+						{{ form.cook_time(class="form-control form-control-lg is-invalid")}}
+						<div class="invalid-feedback">
+							{% for error in form.cook_time.errors %}
+								<span>{{ error }}</span>
+							{% endfor %}
+						</div>	
+					{% else %}
+						{{ form.cook_time(class="form-control form-control-lg") }}
+					{% endif %}
+				</div>
+				<div class="form-group">
 					{{ form.ingredients[0].label(class="form-control-label") }}
 					{% for ingredient in form.ingredients %}
 					<div class="input-group mb-1">
