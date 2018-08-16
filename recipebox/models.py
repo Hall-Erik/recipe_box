@@ -37,6 +37,7 @@ class Recipe(db.Model):
 	title = db.Column(db.String(100), nullable=False)
 	description = db.Column(db.Text)
 	cook_time = db.Column(db.String(4))
+	servings = db.Column(db.String(10))
 	date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 	image_file = db.Column(db.String(20))
 	directions = db.relationship('Direction', backref='recipe', lazy=True, cascade='delete')
