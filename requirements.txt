@@ -95,7 +95,6 @@ numexpr==2.6.2
 numpy==1.13.3
 numpydoc==0.7.0
 oauthlib==2.0.7
-odo==0.5.1
 olefile==0.44
 opencv-python==3.4.1.15
 openpyxl==2.4.8
