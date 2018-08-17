@@ -124,7 +124,6 @@ pyflakes==1.6.0
 pygame==1.9.3
 Pygments==2.2.0
 pylint==1.7.4
-pyodbc==4.0.17
 pyOpenSSL==17.2.0
 pyparsing==2.2.0
 pyproj==1.9.5.1
