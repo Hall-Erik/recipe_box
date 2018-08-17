@@ -146,7 +146,6 @@ Quandl==3.2.0
 requests==2.14.2
 requests-oauthlib==0.8.0
 rope==0.10.5
-ruamel-yaml==0.11.14
 s2clientprotocol==4.4.0.65895.0
 salem==0.2.1
 seaborn==0.8
