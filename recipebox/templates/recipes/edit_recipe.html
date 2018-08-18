@@ -70,105 +70,37 @@
 					{% endif %}
 				</div>
 				<div class="form-group">
-					{{ form.ingredients[0].label(class="form-control-label") }}
-					{% for ingredient in form.ingredients %}
-					<div class="input-group mb-1">
-						{{ ingredient(class="form-control form-control-lg") }}
-						{% if loop.index < loop.length %}
-	                    <button id="remove{{loop.index0}}" class="btn btn-danger remove-me" type="button">-</button>
-	                    {% else %}
-	                    <button id="b1" class="btn add-more" type="button">+</button>
-	                    {% endif %}
-	                </div>	
-					{% endfor %}					
+					{{ form.ingredients.label(class="form-control-label") }}
+
+					{% if form.ingredients.errors %}
+						{{ form.ingredients(class="form-control form-control-lg is-invalid", placeholder='enter each ingredient on a new line...')}}
+						<div class="invalid-feedback">
+							{% for error in form.ingredients.errors %}
+								<span>{{ error }}</span>
+							{% endfor %}
+						</div>	
+					{% else %}
+						{{ form.ingredients(class="form-control form-control-lg", placeholder='enter each ingredient on a new line...') }}
+					{% endif %}
 				</div>
 				<div class="form-group">
-					{{ form.directions[0].label(class="form-control-label") }}
-					
-					{% for direction in form.directions %}
-					<div class="input-group mb-1">
-						{{ direction(class="form-control form-control-lg") }}
-						{% if loop.index < loop.length %}
-						<button id="remove{{loop.index0}}" class="btn btn-danger remove-dir" type="button">-</button>
-	                    {% else %}
-	                    <button id="b2" class="btn add-more" type="button">+</button>
-	                    {% endif %}
-                    </div>					
-					{% endfor %}
-					
+					{{ form.directions.label(class="form-control-label") }}
+
+					{% if form.directions.errors %}
+						{{ form.directions(class="form-control form-control-lg is-invalid", placeholder='enter each direction on a new line...')}}
+						<div class="invalid-feedback">
+							{% for error in form.directions.errors %}
+								<span>{{ error }}</span>
+							{% endfor %}
+						</div>	
+					{% else %}
+						{{ form.directions(class="form-control form-control-lg", placeholder='enter each direction on a new line...') }}
+					{% endif %}
 				</div>
 			</fieldset>	
 			<div class="form-group">
 				{{ form.submit(class="btn btn-outline-info") }}
-			</div>			
+			</div>
 		</form>		
 	</div>
-
-	<script type="text/javascript">
-$(document).ready(function(){
-    var next = {{ ing_len - 1 }};
-    var next_dir = {{ dir_len - 1 }};
-
-    $("#b1").click(function(e){
-        e.preventDefault();
-        var addto = "#ingredients-" + next;
-        var addRemove = "#ingredients-" + (next);
-        next = next + 1;
-        var newIn = '</div><div class="input-group mb-1"><input class="form-control form-control-lg" id="ingredients-' + next + '" name="ingredients-' + next + '" type="text">';
-        var newInput = $(newIn);
-        var removeBtn = '<button id="remove' + (next - 1) + '" class="btn btn-danger remove-me" >-</button>';
-        var removeButton = $(removeBtn);
-        $(addto).after(newInput);
-        $(addRemove).after(removeButton);
-        $("#ingredients-" + next).attr('data-source',$(addto).attr('data-source'));
-        
-            $('.remove-me').click(function(e){
-                e.preventDefault();
-                var fieldNum = this.id.charAt(this.id.length-1);
-                var fieldID = "#ingredients-" + fieldNum;
-                $(this).remove();
-                $(fieldID).remove();
-            });
-    });
-
-    $("#b2").click(function(e){
-        e.preventDefault();
-        var addto = "#directions-" + next_dir;
-        var addRemove = "#directions-" + (next_dir);
-        next_dir = next_dir + 1;
-        var newIn = '</div><div class="input-group mb-1"><input class="form-control form-control-lg" id="directions-' + next_dir + '" name="directions-' + next_dir + '" type="text">';
-        var newInput = $(newIn);
-        var removeBtn = '<button id="remove' + (next_dir - 1) + '" class="btn btn-danger remove-dir" >-</button>';
-        var removeButton = $(removeBtn);
-        $(addto).after(newInput);
-        $(addRemove).after(removeButton);
-        $("#directions-" + next_dir).attr('data-source',$(addto).attr('data-source'));
-        
-            $('.remove-dir').click(function(e){
-                e.preventDefault();
-                var fieldNum = this.id.charAt(this.id.length-1);
-                var fieldID = "#directions-" + fieldNum;
-                $(this).remove();
-                $(fieldID).remove();
-            });
-    });
-
-
-    $('.remove-me').click(function(e){
-                e.preventDefault();
-                var fieldNum = this.id.charAt(this.id.length-1);
-                var fieldID = "#ingredients-" + fieldNum;
-                $(this).remove();
-                $(fieldID).remove();
-    });
-
-    $('.remove-dir').click(function(e){
-                e.preventDefault();
-                var fieldNum = this.id.charAt(this.id.length-1);
-                var fieldID = "#directions-" + fieldNum;
-                $(this).remove();
-                $(fieldID).remove();
-    });		
-});
-	</script>
 {% endblock content %}

@@ -33,30 +33,32 @@
 		<div class="row">
 			<p>{{ recipe.description }}</p>
 		</div>
-		<div class="row">
-			{% if recipe.ingredients|length > 0 %}
+		{% if recipe.ingredients %}
+			<div class="row">
 				<h3>Ingredients</h3>
-			{% endif %}
-		</div>
-		<div class="row">
-			<ul>
-				{% for ingredient in recipe.ingredients %}
-					<li>{{ ingredient.content }}</li>
-				{% endfor %}
-			</ul>
-		</div>
-		<div class="row">
-			{% if recipe.directions|length > 0 %}
+			</div>
+			<div class="row">
+				<ul>
+					{% set ingredients = recipe.ingredients.split('\r\n') %}
+					{% for ingredient in ingredients %}
+					<li>{{ ingredient }}</li>
+					{% endfor %}
+				</ul>
+			</div>
+		{% endif %}
+		{% if recipe.directions %}
+			<div class="row">			
 				<h3>Directions</h3>
-			{% endif %}
-		</div>	
-		<div class="row">
-			<ol>
-				{% for direction in recipe.directions %}
-					<li>{{ direction.content }}</li>
-				{% endfor %}
-			</ol>
-		</div>
+			</div>	
+			<div class="row">
+				<ol>
+					{% set directions = recipe.directions.split('\r\n') %}
+					{% for direction in directions %}
+					<li>{{ direction }}</li>
+					{% endfor %}
+				</ol>
+			</div>
+		{% endif %}
 	</div>
 
     <!-- Modal -->

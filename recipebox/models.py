@@ -40,28 +40,10 @@ class Recipe(db.Model):
 	servings = db.Column(db.String(10))
 	date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 	image_file = db.Column(db.String(20))
-	directions = db.relationship('Direction', backref='recipe', lazy=True, cascade='delete')
-	ingredients = db.relationship('Ingredient', backref='recipe', lazy=True, cascade='delete')
+	directions = db.Column(db.Text)
+	ingredients = db.Column(db.Text)
 
 	user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
 	def __repr__(self):
 		return f"Recipe('{self.title}', '{self.date_posted}')"
-
-class Direction(db.Model):
-	id = db.Column(db.Integer, primary_key=True)
-	content = db.Column(db.Text, nullable=False)
-	date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-	recpie_id = db.Column(db.Integer, db.ForeignKey('recipe.id'), nullable=False)
-
-	def __repr__(self):
-		return self.content
-
-class Ingredient(db.Model):
-	id = db.Column(db.Integer, primary_key=True)
-	content = db.Column(db.String(50), nullable=False)
-	date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-	recpie_id = db.Column(db.Integer, db.ForeignKey('recipe.id'), nullable=False)
-
-	def __repr__(self):
-		return self.content

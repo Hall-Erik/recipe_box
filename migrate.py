@@ -1,5 +1,5 @@
 from recipebox import create_app, db
-from recipebox.models import User, Recipe, Ingredient, Direction
+# from recipebox.models import User, Recipe
 from flask_alembic import Alembic
 
 app = create_app()
