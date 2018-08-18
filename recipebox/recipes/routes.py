@@ -22,17 +22,15 @@ def create_recipe():
 			picture = save_picture(form.picture.data)
 			recipe.image_file = picture
 		db.session.add(recipe)
-		db.session.commit()
 		for ingredient in form.ingredients:
 			if ingredient.data != "":
 				i = Ingredient(content=ingredient.data, recipe=recipe)
 				db.session.add(i)
-				db.session.commit()
 		for direction in form.directions:
 			if direction.data != "":
 				d = Direction(content=direction.data, recipe=recipe)
 				db.session.add(d)
-				db.session.commit()
+		db.session.commit()
 		flash('Your recipe has been added!', 'success')
 		return redirect(url_for('main.home'))
 	return render_template('recipes/create_recipe.html', title="Create Recipe", form=form)
@@ -40,6 +38,8 @@ def create_recipe():
 @recipes.route('/recipe/<int:recipe_id>')
 def recipe(recipe_id):
 	recipe = Recipe.query.get_or_404(recipe_id)
+	for ingredient in recipe.ingredients:
+		print(ingredient.content, ingredient.date_posted)
 	return render_template('recipes/recipe.html', title=recipe.title, recipe=recipe)
 
 @recipes.route('/recipe/<int:recipe_id>/edit', methods=['POST', 'GET'])

@@ -51,7 +51,7 @@ class Recipe(db.Model):
 class Direction(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	content = db.Column(db.Text, nullable=False)
-
+	date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 	recpie_id = db.Column(db.Integer, db.ForeignKey('recipe.id'), nullable=False)
 
 	def __repr__(self):
@@ -60,7 +60,7 @@ class Direction(db.Model):
 class Ingredient(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	content = db.Column(db.String(50), nullable=False)
-
+	date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 	recpie_id = db.Column(db.Integer, db.ForeignKey('recipe.id'), nullable=False)
 
 	def __repr__(self):

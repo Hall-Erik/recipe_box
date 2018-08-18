@@ -9,6 +9,8 @@ alembic = Alembic(app)
 
 alembic.revision('made changes')
 
+# db.drop_all()
+
 input("Press Enter to apply migration...")
 
 alembic.upgrade()

@@ -121,7 +121,6 @@ pycrypto==2.6.1
 pycurl==7.43.0
 pyepsg==0.3.2
 pyflakes==1.6.0
-pygame==1.9.3
 Pygments==2.2.0
 pylint==1.7.4
 pyOpenSSL==17.2.0
