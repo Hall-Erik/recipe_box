@@ -47,9 +47,8 @@ def logout():
 def account():
 	form = UpdateAccountForm()
 	if form.validate_on_submit():
-		if form.picture.data:
-			picture = save_picture(form.picture.data)
-			current_user.image_file = picture
+		if form.picture.data and form.picture.data != current_user.image_file:
+			current_user.image_file = form.picture.data
 		current_user.username = form.username.data
 		current_user.email = form.email.data
 		db.session.commit()
@@ -58,7 +57,10 @@ def account():
 	pw_form = UpdatePasswordForm()
 	form.username.data = current_user.username
 	form.email.data = current_user.email
-	profile_pic = url_for('static', filename='profile_pics/' + current_user.image_file)
+	if current_user.image_file == 'default_profile.jpg':
+		profile_pic = url_for('static', filename='profile_pics/' + current_user.image_file)
+	else:
+		profile_pic = current_user.image_file
 	return render_template('users/account.html', title='Account', form=form, profile_pic=profile_pic, pw_form=pw_form)
 
 @users.route('/update_password', methods=['POST'])

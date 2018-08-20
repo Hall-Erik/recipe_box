@@ -12,3 +12,8 @@ def save_picture(form_picture, path, output_size):
 	i.thumbnail(output_size)
 	i.save(picture_path)
 	return picture_filename
+
+def rand_picture_name(filename):
+	rand_hex = secrets.token_hex(8)
+	_, f_ext = os.path.splitext(filename)
+	return rand_hex + f_ext

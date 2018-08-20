@@ -3,9 +3,6 @@ from flask_mail import Message
 from recipebox import mail
 import recipebox.utils as utils
 
-def save_picture(form_picture):
-	return utils.save_picture(form_picture=form_picture, path='static/profile_pics', output_size=(150,150))
-
 def send_reset_email(user):
 	token = user.get_reset_token()
 	msg = Message('Password Reset Request Do Not Reply',
