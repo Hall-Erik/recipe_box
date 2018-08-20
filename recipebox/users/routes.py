@@ -5,7 +5,7 @@ from recipebox.models import User
 from recipebox.users.forms import (RegistrationForm, LoginForm, 
 								UpdateAccountForm, UpdatePasswordForm,
 								RequestResetForm, ResetPasswordForm)
-from recipebox.users.utils import save_picture, send_reset_email
+from recipebox.users.utils import send_reset_email
 
 users = Blueprint('users', __name__)
 
