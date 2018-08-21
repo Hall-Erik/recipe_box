@@ -1,7 +1,6 @@
 from flask import url_for
 from flask_mail import Message
 from recipebox import mail
-import recipebox.utils as utils
 
 def send_reset_email(user):
 	token = user.get_reset_token()
