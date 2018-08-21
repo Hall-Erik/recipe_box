@@ -27,7 +27,10 @@ def create_recipe():
 		db.session.commit()
 		flash('Your recipe has been added!', 'success')
 		return redirect(url_for('main.home'))
-	return render_template('recipes/create_recipe.html', title="Create Recipe", form=form)
+	return render_template('recipes/create_edit_recipe.html',
+						title="Create Recipe",
+						legend="Add a recipe!",
+						form=form)
 
 @recipes.route('/recipe/<int:recipe_id>')
 def recipe(recipe_id):
@@ -53,7 +56,10 @@ def edit_recipe(recipe_id):
 			recipe.image_file = picture
 		db.session.commit()
 		return redirect(url_for('recipes.recipe', recipe_id=recipe.id))
-	return render_template('recipes/edit_recipe.html', title="Update Recipe", form=form)
+	return render_template('recipes/create_edit_recipe.html',
+						title="Update Recipe",
+						legend="Edit recipe!",
+						form=form)
 	
 @recipes.route('/recipe/<int:recipe_id>/delete', methods=['POST'])
 @login_required
