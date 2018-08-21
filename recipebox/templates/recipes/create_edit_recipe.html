@@ -2,7 +2,7 @@
 {% block content %}
 	<div class="content-section">
 		<form method="POST" action="" enctype="multipart/form-data">
-			{{ form.hidden_tag() }}
+			{{ form.csrf_token }}
 			<fieldset class="form-group">
 				<legend class="border-bottom mb-4">{{ legend }}</legend>
 				<div class="form-group">
@@ -20,7 +20,6 @@
 				</div>
 				<div class="form-group">
 					{{ form.description.label(class="form-control-label") }}
-
 					{% if form.description.errors %}
 						{{ form.description(class="form-control form-control-lg is-invalid")}}
 						<div class="invalid-feedback">
@@ -32,46 +31,46 @@
 						{{ form.description(class="form-control form-control-lg") }}
 					{% endif %}
 				</div>
-				<div class="form-group">
-					{{ form.picture.label }}
-					{{ form.picture(class="form-control-file")}}
-					{% if form.picture.errors %}
-							{% for error in form.picture.errors %}
-								<span class="text-danger">{{ error }}</span><br />
-							{% endfor %}
-					{% endif %}
+				<div class="form-row">
+					<div class="col-5">
+						<div class="form-group">
+							{{ form.picture.label }}<br>
+							{{ form.picture(id="image_url", value=recipe_picture) }}
+							<input type="file" id="file_input"/>
+							<img id="preview" style="width: 200px;" src="{{ recipe_picture }}"/>
+						</div>
+					</div>
+					<div class="col-7">
+						<div class="form-group">
+							{{ form.cook_time.label(class="form-control-label") }}
+							{% if form.cook_time.errors %}
+								{{ form.cook_time(class="form-control form-control-lg is-invalid", placeholder='minutes')}}
+								<div class="invalid-feedback">
+									{% for error in form.cook_time.errors %}
+										<span>{{ error }}</span>
+									{% endfor %}
+								</div>	
+							{% else %}
+								{{ form.cook_time(class="form-control form-control-lg", placeholder='minutes') }}
+							{% endif %}
+						</div>
+						<div class="form-group">
+							{{ form.servings.label(class="form-control-label") }}
+							{% if form.servings.errors %}
+								{{ form.servings(class="form-control form-control-lg is-invalid", placeholder='5, 7-8')}}
+								<div class="invalid-feedback">
+									{% for error in form.servings.errors %}
+										<span>{{ error }}</span>
+									{% endfor %}
+								</div>	
+							{% else %}
+								{{ form.servings(class="form-control form-control-lg", placeholder='5, 7-8') }}
+							{% endif %}
+						</div>
+					</div>
 				</div>
-				<div class="form-group">
-					{{ form.cook_time.label(class="form-control-label") }}
-
-					{% if form.cook_time.errors %}
-						{{ form.cook_time(class="form-control form-control-lg is-invalid", placeholder='minutes')}}
-						<div class="invalid-feedback">
-							{% for error in form.cook_time.errors %}
-								<span>{{ error }}</span>
-							{% endfor %}
-						</div>	
-					{% else %}
-						{{ form.cook_time(class="form-control form-control-lg", placeholder='minutes') }}
-					{% endif %}
-				</div>
-				<div class="form-group">
-					{{ form.servings.label(class="form-control-label") }}
-
-					{% if form.servings.errors %}
-						{{ form.servings(class="form-control form-control-lg is-invalid")}}
-						<div class="invalid-feedback">
-							{% for error in form.servings.errors %}
-								<span>{{ error }}</span>
-							{% endfor %}
-						</div>	
-					{% else %}
-						{{ form.servings(class="form-control form-control-lg") }}
-					{% endif %}
-				</div>
-				<div class="form-group">
+				<div class="form-group float-none">
 					{{ form.ingredients.label(class="form-control-label") }}
-
 					{% if form.ingredients.errors %}
 						{{ form.ingredients(class="form-control form-control-lg is-invalid", placeholder='enter each ingredient on a new line...')}}
 						<div class="invalid-feedback">
@@ -85,7 +84,6 @@
 				</div>
 				<div class="form-group">
 					{{ form.directions.label(class="form-control-label") }}
-
 					{% if form.directions.errors %}
 						{{ form.directions(class="form-control form-control-lg is-invalid", placeholder='enter each direction on a new line...')}}
 						<div class="invalid-feedback">
@@ -103,4 +101,5 @@
 			</div>
 		</form>		
 	</div>
+	<script src="{{ url_for('static', filename='js/upload_image.js') }}"></script>
 {% endblock content %}

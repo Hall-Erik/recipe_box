@@ -19,7 +19,6 @@ def about():
 def sign_s3():
 	S3_BUCKET = os.environ.get('S3_BUCKET_NAME')
 
-	# file_name = request.args.get('file_name')
 	file_name = rand_picture_name(request.args.get('file_name'))
 	file_type = request.args.get('file_type')
 

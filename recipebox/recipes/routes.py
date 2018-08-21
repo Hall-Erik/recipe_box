@@ -3,7 +3,6 @@ from flask import (Blueprint, render_template, flash,
 from flask_login import current_user, login_required
 from recipebox import db
 from recipebox.recipes.forms import CreateRecipeForm, EditRecipeForm
-from recipebox.recipes.utils import save_picture
 from recipebox.models import Recipe
 
 recipes = Blueprint('recipes', __name__)
@@ -21,15 +20,17 @@ def create_recipe():
 						directions=form.directions.data,
 						user_id=current_user.id)
 		if form.picture.data:
-			picture = save_picture(form.picture.data)
-			recipe.image_file = picture
+			print(form.picture.data)
+			recipe.image_file = form.picture.data
 		db.session.add(recipe)
 		db.session.commit()
 		flash('Your recipe has been added!', 'success')
 		return redirect(url_for('main.home'))
+	recipe_picture = url_for('static', filename='recipe_pics/default.png')
 	return render_template('recipes/create_edit_recipe.html',
 						title="Create Recipe",
 						legend="Add a recipe!",
+						recipe_picture=recipe_picture,
 						form=form)
 
 @recipes.route('/recipe/<int:recipe_id>')
@@ -51,14 +52,16 @@ def edit_recipe(recipe_id):
 		recipe.servings = form.servings.data
 		recipe.ingredients = form.ingredients.data
 		recipe.directions = form.directions.data
-		if form.picture.data:
-			picture = save_picture(form.picture.data)
-			recipe.image_file = picture
+		if form.picture.data and recipe.image_file != form.picture.data:
+			recipe.image_file = form.picture.data
 		db.session.commit()
 		return redirect(url_for('recipes.recipe', recipe_id=recipe.id))
+	recipe_picture = recipe.get_image_url()
+	print(recipe_picture)
 	return render_template('recipes/create_edit_recipe.html',
 						title="Update Recipe",
 						legend="Edit recipe!",
+						recipe_picture=recipe_picture,
 						form=form)
 	
 @recipes.route('/recipe/<int:recipe_id>/delete', methods=['POST'])

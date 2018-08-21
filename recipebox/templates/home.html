@@ -5,11 +5,7 @@
 		<div class="col-sm-3">
 			<div class="card text-center">
 				<div class="card-body">
-					{% if recipe.image_file %}						
-						<img class="card-img-top" src="{{ url_for('static', filename='recipe_pics/' + recipe.image_file) }}" />			
-					{% else %}
-						<img class="card-img-top" src="{{ url_for('static', filename='recipe_pics/default.png') }}" />
-					{% endif %}
+					<img class="card-img-top" src="{{ recipe.get_image_url() }}" />	
 					<h4 class="card-title"><a href="{{ url_for('recipes.recipe', recipe_id=recipe.id )}}">{{ recipe.title }}</a></h4>
 					<p class="card-text">{{ recipe.description }}</p>
 				</div>

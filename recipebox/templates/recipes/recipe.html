@@ -12,11 +12,9 @@
 			</div>
 			{% endif %}
 		</div>
-		{% if recipe.image_file %}
-			<div class="row">
-				<img src="{{ url_for('static', filename='recipe_pics/' + recipe.image_file) }}" />
-			</div>
-		{% endif %}
+		<div class="row">
+			<img style="width: 200px; height: 200px;" src="{{ recipe.get_image_url() }}" />
+		</div>
 		<div class="row">
 			<small class="text-muted">User: <a href="{{ url_for('users.user_recipes', user_id=recipe.author.id) }}">{{ recipe.author.username }}</a></small>
 		</div>

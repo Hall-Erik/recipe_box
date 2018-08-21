@@ -1,6 +1,6 @@
 from datetime import datetime
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
-from flask import current_app
+from flask import current_app, url_for
 from recipebox import db, login_manager
 from flask_login import UserMixin
 
@@ -39,11 +39,17 @@ class Recipe(db.Model):
 	cook_time = db.Column(db.String(4))
 	servings = db.Column(db.String(10))
 	date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-	image_file = db.Column(db.String(20))
+	image_file = db.Column(db.String(100), nullable=False, default='default.png')
 	directions = db.Column(db.Text)
 	ingredients = db.Column(db.Text)
 
 	user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+
+	def get_image_url(self):
+		if self.image_file == 'default.png':
+			return url_for('static', filename='recipe_pics/default.png')
+		else:
+			return self.image_file
 
 	def __repr__(self):
 		return f"Recipe('{self.title}', '{self.date_posted}')"
