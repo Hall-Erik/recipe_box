@@ -1,17 +1,20 @@
 {% extends "layout.html" %}
 {% block content %}
 	<div class="content-section">
-		<legend class="border-bottom mb-4">Account Info</legend>
-		<div class="media">
-			<div class="float-left">
-				<img class="img-thumbnail profile-pic" id="preview" style="width: 150px;" src="{{ profile_pic }}"/>
-				<p>Upload profile picture</p>
-				<input type="file" id="file_input"/>
-			</div>
-			<div class="media-body">
-				<form method="POST" action="" enctype="multipart/form-data">
-					{{ form.csrf_token }}
-					<fieldset class="form-group">				
+		<form method="POST" action="">
+			<fieldset>
+				<legend class="border-bottom mb-4">Account Info</legend>
+				{{ form.csrf_token }}
+				<div class="form-row">
+					<div class="col-4">
+						<div class="form-group">
+							<img class="img-thumbnail profile-pic" id="preview" style="width: 150px;" src="{{ profile_pic }}"/>
+							<p>Upload profile picture</p>
+							<input type="file" id="file_input"/>
+							{{ form.picture(id="image_url", value=profile_pic) }}
+						</div>
+					</div>					
+					<div class="col-8">
 						<div class="form-group">
 							{{ form.username.label(class="form-control-label") }}
 							{% if form.username.errors %}
@@ -37,18 +40,18 @@
 							{% else %}
 								{{ form.email(class="form-control form-control-lg") }}
 							{% endif %}
-						</div>
+						</div>							
+					</div>
+				</div>
+				<div class="form-row">
+					<div class="col-12">
 						<div class="form-group">
-							{{ form.picture(id="image_url", value=profile_pic) }}
-						</div>
-			</div>
-		</div>
-						<div class="form-group mt-3">
 							{{ form.submit(class="btn btn-outline-info") }}
-						</div>	
-					</fieldset>	
-				</form>
-		
+						</div>
+					</div>
+				</div>						
+			</fieldset>	
+		</form>
 		<form method="POST" action="{{ url_for('users.update_password') }}">
 			{{ pw_form.hidden_tag() }}
 			<fieldset class="form-group">
