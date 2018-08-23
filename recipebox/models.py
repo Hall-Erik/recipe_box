@@ -16,6 +16,12 @@ class User(db.Model, UserMixin):
 	password = db.Column(db.String(60), nullable=False)
 	recipes = db.relationship('Recipe', backref='author', lazy=True)
 
+	def get_image_url(self):
+		if self.image_file == 'default_profile.jpg':
+			return url_for('static', filename='profile_pics/' + self.image_file)
+		else:
+			return self.image_file
+
 	def get_reset_token(self, expires_sec=1800):
 		s = Serializer(current_app.config['SECRET_KEY'], expires_sec)
 		return s.dumps({'user_id': self.id}).decode('utf-8')

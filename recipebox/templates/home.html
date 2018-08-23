@@ -1,5 +1,8 @@
 {% extends "layout.html" %}
 {% block content %}
+	{% if heading %}
+		<h5>{{ heading }}</h5>
+	{% endif %}
 	<div class="row">
 	{% for recipe in recipes %}
 		<div class="col-sm-3">
@@ -7,6 +10,9 @@
 				<div class="card-body">
 					<img class="card-img-top" src="{{ recipe.get_image_url() }}" />	
 					<h4 class="card-title"><a href="{{ url_for('recipes.recipe', recipe_id=recipe.id )}}">{{ recipe.title }}</a></h4>
+					<small class="card-text text-muted">
+						Author: <a href="{{ url_for('users.user_recipes', user_id=recipe.author.id) }}">{{ recipe.author.username }}</a>
+					</small>
 					<p class="card-text">{{ recipe.description }}</p>
 				</div>
 			</div>

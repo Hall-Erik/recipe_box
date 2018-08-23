@@ -80,7 +80,10 @@ def update_password():
 @users.route('/users/<int:user_id>/recipes')
 def user_recipes(user_id):
 	user = User.query.get_or_404(user_id)
-	return render_template('home.html', title=f"{user.username}'s recipes", recipes=user.recipes)
+	return render_template('home.html',
+						title=f"{user.username}'s recipes",
+						heading=f"Showing recipes by {user.username}",
+						recipes=user.recipes)
 
 @users.route('/reset_password', methods=['POST', 'GET'])
 def reset_request():
