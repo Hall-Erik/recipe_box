@@ -7,29 +7,24 @@
 			</div>
 			{% if recipe.author == current_user %}
 			<div class="ml-3">
-				<a class="btn btn-info" href="{{ url_for('recipes.edit_recipe', recipe_id=recipe.id) }}">Edit</a>
-				<button class="btn btn-danger" data-toggle="modal" data-target="#deleteModal">Delete</button>
+				<a class="btn btn-outline-info" href="{{ url_for('recipes.edit_recipe', recipe_id=recipe.id) }}">Edit</a>
+				<button class="btn btn-outline-danger" data-toggle="modal" data-target="#deleteModal">Delete</button>
 			</div>
 			{% endif %}
 		</div>
 		<div class="row">
-			<img style="width: 200px; height: 200px;" src="{{ recipe.get_image_url() }}" />
-		</div>
-		<div class="row">
-			<small class="text-muted">User: <a href="{{ url_for('users.user_recipes', user_id=recipe.author.id) }}">{{ recipe.author.username }}</a></small>
-		</div>
-		<div class="row">
-			<small class="text-muted">
-				Cook time: {% if recipe.cook_time %}{{ recipe.cook_time }}{% else %}?{% endif %} minutes
-			</small>
-		</div>
-		<div class="row">
-			<small class="text-muted">
-				Serves: {% if recipe.servings %}{{ recipe.servings }}{% else %}?{% endif%}
-			</small>
-		</div>
-		<div class="row">
-			<p>{{ recipe.description }}</p>
+			<div class="col-3">
+				<img style="width: 200px; height: 200px;" src="{{ recipe.get_image_url() }}" />
+			</div>
+			<div class="col-9">
+				<div class="row">
+					<small class="text-muted">User: <a href="{{ url_for('users.user_recipes', user_id=recipe.author.id) }}">{{ recipe.author.username }}</a> | Cook time: {% if recipe.cook_time %}{{ recipe.cook_time }}{% else %}?{% endif %} minutes | Serves: {% if recipe.servings %}{{ recipe.servings }}{% else %}?{% endif%}
+					</small>
+				</div>
+				<div class="row">
+					<p>{{ recipe.description }}</p>
+				</div>
+			</div>
 		</div>
 		{% if recipe.ingredients %}
 			<div class="row">
@@ -70,7 +65,7 @@
           </button>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
           <form action="{{ url_for('recipes.delete_recipe', recipe_id=recipe.id) }}" method="POST">
             <input class="btn btn-danger" type="submit" value="Delete">
           </form>
