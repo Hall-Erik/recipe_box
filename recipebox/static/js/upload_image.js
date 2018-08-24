@@ -5,6 +5,10 @@
 		if(!file){
 			return alert("No file selected.");
 		}
+		var progress = document.getElementById('progress');
+		progress.className = 'progress';
+		var progressBar = document.getElementById('progress-bar');
+		progressBar.setAttribute("style", "width: 33%;");
 		getSignedRequest(file);
 	};
 })();
@@ -16,9 +20,13 @@ function getSignedRequest(file){
 		if(xhr.readyState === 4){
 			if(xhr.status === 200){
 				var response = JSON.parse(xhr.responseText);
+				var progressBar = document.getElementById('progress-bar');
+				progressBar.setAttribute("style", "width: 66%;");
 				uploadFile(file, response.data, response.url);
 			}
 			else{
+				var progress = document.getElementById('progress');
+				progress.className = 'd-none';
 				alert("Could not get signed URL.");
 			}
 		}
@@ -45,6 +53,8 @@ function uploadFile(file, s3Data, url){
 			else{
 				alert("Could not upload file.");
 			}
+			var progress = document.getElementById('progress');
+			progress.className = 'd-none';
 		}
 	};
 	xhr.send(postData);

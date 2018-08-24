@@ -36,7 +36,10 @@
 						<div class="form-group">
 							{{ form.picture.label }}<br>
 							{{ form.picture(id="image_url", value=recipe_picture) }}
-							<input type="file" id="file_input"/>
+							<input class="mb-1" type="file" id="file_input"/>
+							<div id="progress" class="d-none">
+  								<div id="progress-bar" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
+							</div>
 							<img id="preview" style="width: 200px;" src="{{ recipe_picture }}"/>
 						</div>
 					</div>
