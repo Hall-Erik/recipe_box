@@ -8,6 +8,11 @@ from flask_login import UserMixin
 def load_user(user_id):
     return User.query.get(int(user_id))
 
+made_recipes = db.Table('made_recipes',
+	db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),
+	db.Column('recipe_id', db.Integer, db.ForeignKey('recipe.id'), primary_key=True)
+)
+
 class User(db.Model, UserMixin):
 	id = db.Column(db.Integer, primary_key=True)
 	username = db.Column(db.String(20), unique=True, nullable=False)
@@ -15,6 +20,11 @@ class User(db.Model, UserMixin):
 	image_file = db.Column(db.String(100), nullable=False, default='default_profile.jpg')
 	password = db.Column(db.String(60), nullable=False)
 	recipes = db.relationship('Recipe', backref='author', lazy=True)
+
+	made_recipes = db.relationship('Recipe', secondary=made_recipes)
+
+	def made_this(self, recipe):
+		return True if recipe in self.made_recipes else False
 
 	def get_image_url(self):
 		if self.image_file == 'default_profile.jpg':

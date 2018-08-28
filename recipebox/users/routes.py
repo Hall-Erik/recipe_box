@@ -1,7 +1,7 @@
-from flask import render_template, Blueprint, redirect, url_for, flash, request
+from flask import render_template, Blueprint, redirect, url_for, flash, request, jsonify
 from flask_login import login_user, current_user, logout_user, login_required
 from recipebox import db, bcrypt
-from recipebox.models import User
+from recipebox.models import User, Recipe
 from recipebox.users.forms import (RegistrationForm, LoginForm, 
 								UpdateAccountForm, UpdatePasswordForm,
 								RequestResetForm, ResetPasswordForm)
@@ -113,3 +113,17 @@ def reset_token(token):
 		flash('Your password has been updated!', 'success')
 		return redirect(url_for('users.login'))
 	return render_template('users/reset_token.html', title='Reset Password', form=form)
+
+@users.route('/made_recipe/')
+def made_recipe():
+	recipe = Recipe.query.get_or_404(request.args.get('recipe_id'))
+	if recipe in current_user.made_recipes:
+		current_user.made_recipes.remove(recipe)		
+		print('removed')
+	else:
+		current_user.made_recipes.append(recipe)
+		print('added')
+
+	db.session.commit()
+	
+	return jsonify()

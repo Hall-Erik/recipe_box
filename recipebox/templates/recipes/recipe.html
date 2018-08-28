@@ -26,6 +26,15 @@
 				</div>
 			</div>
 		</div>
+		{% if current_user.is_authenticated %}
+		<div class="row mt-2">
+			{% if current_user.made_this(recipe) %}
+				<input type="button" id="made-it" class="btn btn-success" value="Made it. ✓" />
+			{% else %}
+				<input type="button" id="made-it" class="btn btn-outline-secondary" value="Made it?" />
+			{% endif %}
+		</div>
+		{% endif %}
 		<div class="row">
 		{% if recipe.ingredients %}
 		<div class="col-sm-12 col-md-4">
@@ -79,4 +88,29 @@
       </div>
     </div>
   </div>
+
+  <script type="text/javascript">
+  	var recipe_id = {{ recipe.id }};
+  	(function(){
+  		var button = document.getElementById('made-it');
+  		button.onclick = function() {
+  			if (button.className === 'btn btn-success') {
+  				button.className = 'btn btn-outline-secondary';
+  				button.value = 'Made it?';
+  				cahnge_made_recipe(false);
+  			}
+  			else {
+  				button.className = 'btn btn-success';
+  				button.value = 'Made it. ✓';
+  				cahnge_made_recipe(true);
+  			}
+  		};
+  	})();
+
+  	function cahnge_made_recipe(madeRecipe) {
+  		var xhr = new XMLHttpRequest();
+  		xhr.open("GET", "/made_recipe?recipe_id=" + recipe_id);
+		xhr.send();
+  	}
+  </script>
 {% endblock content %}
