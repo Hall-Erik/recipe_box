@@ -35,3 +35,8 @@ h1, h2, h3, h4, h5, h6 {
 .profile-pic {
   width: 150px
 }
+
+.recipe-pic {
+  width: 200px;
+  max-height: 200px;
+}
