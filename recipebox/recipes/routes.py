@@ -19,14 +19,13 @@ def create_recipe():
 						ingredients=form.ingredients.data,
 						directions=form.directions.data,
 						user_id=current_user.id)
-		if form.picture.data:
-			print(form.picture.data)
+		if form.picture.data and form.picture.data != url_for('static', filename='img/default.png'):
 			recipe.image_file = form.picture.data
 		db.session.add(recipe)
 		db.session.commit()
 		flash('Your recipe has been added!', 'success')
 		return redirect(url_for('main.home'))
-	recipe_picture = url_for('static', filename='recipe_pics/default.png')
+	recipe_picture = url_for('static', filename='img/default.png')
 	return render_template('recipes/create_edit_recipe.html',
 						title="Create Recipe",
 						legend="Add a recipe!",

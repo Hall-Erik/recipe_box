@@ -18,7 +18,7 @@ class User(db.Model, UserMixin):
 
 	def get_image_url(self):
 		if self.image_file == 'default_profile.jpg':
-			return url_for('static', filename='profile_pics/' + self.image_file)
+			return url_for('static', filename='img/' + self.image_file)
 		else:
 			return self.image_file
 
@@ -53,7 +53,7 @@ class Recipe(db.Model):
 
 	def get_image_url(self):
 		if self.image_file == 'default.png':
-			return url_for('static', filename='recipe_pics/default.png')
+			return url_for('static', filename='img/' + self.image_file)
 		else:
 			return self.image_file
 

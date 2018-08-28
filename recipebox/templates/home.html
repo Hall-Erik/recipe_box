@@ -6,17 +6,17 @@
 	<div class="row">
 	{% for recipe in recipes %}
 		<div class="col-sm-3">
-			<div class="card text-center">
-				<div class="card-body">
-					<img class="card-img-top" src="{{ recipe.get_image_url() }}" />	
+			<div class="card">
+				<a href="{{ url_for('recipes.recipe', recipe_id=recipe.id )}}"><img class="card-img-top" src="{{ recipe.get_image_url() }}" /></a>
+				<div class="card-body">					
 					<h4 class="card-title"><a href="{{ url_for('recipes.recipe', recipe_id=recipe.id )}}">{{ recipe.title }}</a></h4>
-					<small class="card-text text-muted">
+					<small class="card-text text-muted d-flex align-items-end">
 						Author: <a href="{{ url_for('users.user_recipes', user_id=recipe.author.id) }}">{{ recipe.author.username }}</a>
 					</small>
-					<p class="card-text">{{ recipe.description }}</p>
+					<p class="card-text d-flex align-self-end">{{ recipe.description }}</p>
 				</div>
 			</div>
 		</div>
 	{% endfor %}
 	</div>
-{% endblock content %}
+{% endblock content%}
