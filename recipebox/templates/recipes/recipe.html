@@ -28,11 +28,14 @@
 		</div>
 		{% if current_user.is_authenticated %}
 		<div class="row mt-2">
-			{% if current_user.made_this(recipe) %}
-				<input type="button" id="made-it" class="btn btn-success" value="Made it. ✓" />
-			{% else %}
-				<input type="button" id="made-it" class="btn btn-outline-secondary" value="Made it?" />
-			{% endif %}
+			<div>
+				{% if current_user.made_this(recipe) %}
+					<input type="button" id="made-it" class="btn btn-outline-success" value="✓ Made it. {{ recipe.users|length }}" />
+				{% else %}
+					<input type="button" id="made-it" class="btn btn-success" value="Made it? {{ recipe.users|length }}" />
+				{% endif %}
+			</div>
+			<div class="ml-1"></div>
 		</div>
 		{% endif %}
 		<div class="row">
@@ -94,22 +97,34 @@
   	(function(){
   		var button = document.getElementById('made-it');
   		button.onclick = function() {
-  			if (button.className === 'btn btn-success') {
-  				button.className = 'btn btn-outline-secondary';
-  				button.value = 'Made it?';
-  				cahnge_made_recipe(false);
-  			}
-  			else {
-  				button.className = 'btn btn-success';
-  				button.value = 'Made it. ✓';
-  				cahnge_made_recipe(true);
-  			}
+			cahnge_made_recipe();
+
+
   		};
   	})();
 
-  	function cahnge_made_recipe(madeRecipe) {
+  	function update_button(data) {
+  		var button = document.getElementById('made-it');
+  		if (data.added) {
+			button.className = 'btn btn-outline-success';
+			button.value = '✓ Made it. ' + data.count;
+  		}
+  		else {
+			button.className = 'btn btn-success';
+			button.value = 'Made it? ' + data.count;
+  		}
+  	}
+
+  	function cahnge_made_recipe() {
   		var xhr = new XMLHttpRequest();
   		xhr.open("GET", "/made_recipe?recipe_id=" + recipe_id);
+  		xhr.onreadystatechange = function(){
+			if(xhr.readyState === 4){
+				if(xhr.status === 200){
+					update_button(JSON.parse(xhr.responseText));
+				}
+			}
+		};
 		xhr.send();
   	}
   </script>

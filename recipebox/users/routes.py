@@ -117,13 +117,16 @@ def reset_token(token):
 @users.route('/made_recipe/')
 def made_recipe():
 	recipe = Recipe.query.get_or_404(request.args.get('recipe_id'))
+	data = {}
 	if recipe in current_user.made_recipes:
-		current_user.made_recipes.remove(recipe)		
+		current_user.made_recipes.remove(recipe)
+		data['added'] = False
 		print('removed')
 	else:
 		current_user.made_recipes.append(recipe)
+		data['added'] = True
 		print('added')
 
 	db.session.commit()
-	
-	return jsonify()
+	data['count'] = len(recipe.users)
+	return jsonify(data)

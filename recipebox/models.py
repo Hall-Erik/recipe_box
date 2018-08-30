@@ -21,7 +21,7 @@ class User(db.Model, UserMixin):
 	password = db.Column(db.String(60), nullable=False)
 	recipes = db.relationship('Recipe', backref='author', lazy=True)
 
-	made_recipes = db.relationship('Recipe', secondary=made_recipes)
+	made_recipes = db.relationship('Recipe', secondary=made_recipes, backref='users')
 
 	def made_this(self, recipe):
 		return True if recipe in self.made_recipes else False
