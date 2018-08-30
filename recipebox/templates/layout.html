@@ -36,8 +36,14 @@
             <div class="navbar-nav">
                 {% if current_user.is_authenticated %}
 	                <a class="nav-item nav-link" href="{{ url_for('recipes.create_recipe') }}">New Recipe</a>
-	                <a class="nav-item nav-link" href="{{ url_for('users.account') }}">{{ current_user.username }}</a>
-	                <a class="nav-item nav-link" href="{{ url_for('users.logout') }}">Logout</a>
+                  <div class="dropdown show">
+                    <a class="nav-item nav-link dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ current_user.username }}</a>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
+                      <a class="dropdown-item" href="{{ url_for('users.user_stats') }}">User Stats</a>
+	                    <a class="dropdown-item" href="{{ url_for('users.account') }}">Account Settings</a>
+	                    <a class="dropdown-item" href="{{ url_for('users.logout') }}">Logout</a>
+                    </div>
+                  </div>
 	            {% else %}
                 	<a class="nav-item nav-link" href="{{ url_for('users.login') }}">Login</a>
                 	<a class="nav-item nav-link" href="{{ url_for('users.register') }}">Register</a>

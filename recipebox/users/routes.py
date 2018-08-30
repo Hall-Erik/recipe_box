@@ -60,6 +60,12 @@ def account():
 	profile_pic = current_user.get_image_url()
 	return render_template('users/account.html', title='Account', form=form, profile_pic=profile_pic, pw_form=pw_form)
 
+@users.route('/stats')
+@login_required
+def user_stats():
+	profile_pic = current_user.get_image_url()
+	return render_template('users/stats.html', title='Stats', profile_pic=profile_pic)
+
 @users.route('/update_password', methods=['POST'])
 @login_required
 def update_password():
