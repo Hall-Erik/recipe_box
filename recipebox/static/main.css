@@ -36,8 +36,20 @@ h1, h2, h3, h4, h5, h6 {
   width: 150px
 }
 
+.home-recipe-pic {
+  max-height: 200px;
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.home-recipe-pic-div {
+  height: 200px;
+  background-color: #e8e8e8;
+}
+
 .recipe-pic {
-  width: 200px;
+  max-width: 200px;
   max-height: 200px;
 }
 
