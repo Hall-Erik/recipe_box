@@ -93,13 +93,10 @@
   </div>
 
   <script type="text/javascript">
-  	var recipe_id = {{ recipe.id }};
   	(function(){
   		var button = document.getElementById('made-it');
   		button.onclick = function() {
-			cahnge_made_recipe();
-
-
+				cahnge_made_recipe();
   		};
   	})();
 
@@ -117,7 +114,7 @@
 
   	function cahnge_made_recipe() {
   		var xhr = new XMLHttpRequest();
-  		xhr.open("GET", "/made_recipe?recipe_id=" + recipe_id);
+  		xhr.open("GET", "{{ url_for('users.made_recipe', recipe_id=recipe.id) }}");
   		xhr.onreadystatechange = function(){
 			if(xhr.readyState === 4){
 				if(xhr.status === 200){
