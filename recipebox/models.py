@@ -1,7 +1,7 @@
 from datetime import datetime
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from flask import current_app, url_for
-from recipebox import db, login_manager
+from recipebox import db, login_manager, bcrypt
 from flask_login import UserMixin
 
 @login_manager.user_loader
@@ -22,6 +22,12 @@ class User(db.Model, UserMixin):
 	recipes = db.relationship('Recipe', backref='author', lazy=True)
 
 	made_recipes = db.relationship('Recipe', secondary=made_recipes, backref='users')
+
+	def set_password(self, password):
+		self.password = bcrypt.generate_password_hash(password).decode('utf-8')
+
+	def check_password(self, password):
+		return bcrypt.check_password_hash(self.password, password)
 
 	def made_this(self, recipe):
 		return True if recipe in self.made_recipes else False

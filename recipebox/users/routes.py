@@ -1,10 +1,28 @@
-from flask import render_template, Blueprint, redirect, url_for, flash, request, jsonify
-from flask_login import login_user, current_user, logout_user, login_required
-from recipebox import db, bcrypt
+from flask import (
+	render_template,
+	Blueprint,
+	redirect,
+	url_for,
+	flash,
+	request,
+	jsonify
+)
+from flask_login import (
+	login_user,
+	current_user,
+	logout_user,
+	login_required
+)
+from recipebox import db
 from recipebox.models import User, Recipe
-from recipebox.users.forms import (RegistrationForm, LoginForm, 
-								UpdateAccountForm, UpdatePasswordForm,
-								RequestResetForm, ResetPasswordForm)
+from recipebox.users.forms import (
+	RegistrationForm,
+	LoginForm,
+	UpdateAccountForm,
+	UpdatePasswordForm,
+	RequestResetForm,
+	ResetPasswordForm
+)
 from recipebox.users.utils import send_reset_email
 
 users = Blueprint('users', __name__)
@@ -15,8 +33,10 @@ def register():
 		return redirect(url_for('main.home'))
 	form = RegistrationForm()
 	if form.validate_on_submit():
-		hashed_pw = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-		user = User(username=form.username.data, email=form.email.data, password=hashed_pw)
+		user = User(
+			username=form.username.data,
+			email=form.email.data)
+		user.set_password(form.password.data)
 		db.session.add(user)
 		db.session.commit()
 		flash(f'Your account has been created. You can now login.', 'success')
@@ -30,7 +50,7 @@ def login():
 	form = LoginForm()
 	if form.validate_on_submit():
 		user = User.query.filter_by(email=form.email.data).first()
-		if user and bcrypt.check_password_hash(user.password, form.password.data):
+		if user and user.check_password(form.password.data):
 			login_user(user, remember=form.remember.data)
 			next_page = request.args.get('next')
 			return redirect(next_page) if next_page else redirect(url_for('main.home'))
@@ -71,9 +91,8 @@ def user_stats():
 def update_password():
 	form = UpdatePasswordForm()
 	if form.validate_on_submit():
-		if bcrypt.check_password_hash(current_user.password, form.old_password.data):
-			hashed_pw = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-			current_user.password = hashed_pw
+		if current_user.check_password(form.old_password.data):
+			current_user.set_password(form.password.data)
 			db.session.commit()
 			flash('Your password has been updated!', 'success')
 			return redirect(url_for('users.account'))
@@ -110,8 +129,7 @@ def reset_token(token):
 		return redirect(url_for('users.reset_request'))
 	form = ResetPasswordForm()
 	if form.validate_on_submit():
-		hashed_pw = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-		user.password = hashed_pw
+		user.set_password(form.password.data)
 		db.session.commit()
 		flash('Your password has been updated!', 'success')
 		return redirect(url_for('users.login'))
