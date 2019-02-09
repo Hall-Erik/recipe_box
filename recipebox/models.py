@@ -1,8 +1,9 @@
 from datetime import datetime
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
-from flask import current_app, url_for
-from recipebox import db, login_manager, bcrypt
+from flask import current_app, url_for, render_template
+from flask_mail import Message
 from flask_login import UserMixin
+from recipebox import db, login_manager, bcrypt, mail
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -50,6 +51,18 @@ class User(db.Model, UserMixin):
 		except:
 			return None
 		return User.query.get(user_id)
+
+	def send_reset_email(self):
+		token = self.get_reset_token()
+		msg = Message('Password Reset Request Do Not Reply',
+			sender='noreply@recipebox.com',
+			recipients=[self.email])
+		msg.body = render_template(
+			'email/reset_password.txt',
+			user=self,
+			token=token
+		)
+		mail.send(msg)
 
 	def __repr__(self):
 		return f"User('{self.username}', '{self.email}', '{self.image_file}')"

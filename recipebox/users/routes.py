@@ -23,7 +23,6 @@ from recipebox.users.forms import (
 	RequestResetForm,
 	ResetPasswordForm
 )
-from recipebox.users.utils import send_reset_email
 
 users = Blueprint('users', __name__)
 
@@ -123,7 +122,7 @@ def reset_request():
 	form = RequestResetForm()
 	if form.validate_on_submit():
 		user = User.query.filter_by(email=form.email.data).first()
-		send_reset_email(user)
+		user.send_reset_email()
 		flash(
 			'An email has been sent with instructions to reset your password.',
 			'info')
