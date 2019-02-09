@@ -39,9 +39,11 @@ def register():
 		user.set_password(form.password.data)
 		db.session.add(user)
 		db.session.commit()
-		flash(f'Your account has been created. You can now login.', 'success')
+		flash(f'Your account has been created. You can now login.',
+			'success')
 		return redirect(url_for('users.login'))
-	return render_template('users/register.html', title="Register", form=form)
+	return render_template(
+		'users/register.html', title="Register", form=form)
 
 @users.route('/login', methods=['POST', 'GET'])
 def login():
@@ -54,8 +56,10 @@ def login():
 			login_user(user, remember=form.remember.data)
 			next_page = request.args.get('next')
 			return redirect(next_page) if next_page else redirect(url_for('main.home'))
-		flash('Login unsuccessful. Please check email and password.', 'danger')
-	return render_template('users/login.html', title="Login", form=form)
+		flash('Login unsuccessful. Please check email and password.',
+			'danger')
+	return render_template(
+		'users/login.html', title="Login", form=form)
 
 @users.route('/logout')
 def logout():
@@ -67,7 +71,8 @@ def logout():
 def account():
 	form = UpdateAccountForm()
 	if form.validate_on_submit():
-		if form.picture.data and form.picture.data != current_user.image_file:
+		if form.picture.data \
+			and form.picture.data != current_user.image_file:
 			current_user.image_file = form.picture.data
 		current_user.username = form.username.data
 		current_user.email = form.email.data
@@ -78,13 +83,16 @@ def account():
 	form.username.data = current_user.username
 	form.email.data = current_user.email
 	profile_pic = current_user.get_image_url()
-	return render_template('users/account.html', title='Account', form=form, profile_pic=profile_pic, pw_form=pw_form)
+	return render_template(
+		'users/account.html', title='Account',
+		form=form, profile_pic=profile_pic, pw_form=pw_form)
 
 @users.route('/stats')
 @login_required
 def user_stats():
 	profile_pic = current_user.get_image_url()
-	return render_template('users/stats.html', title='Stats', profile_pic=profile_pic)
+	return render_template(
+		'users/stats.html', title='Stats', profile_pic=profile_pic)
 
 @users.route('/update_password', methods=['POST'])
 @login_required
@@ -96,16 +104,17 @@ def update_password():
 			db.session.commit()
 			flash('Your password has been updated!', 'success')
 			return redirect(url_for('users.account'))
-		flash('Your current password does not match. Please try again!', 'danger')
+		flash('Your current password does not match. Please try again!',
+			'danger')
 	return redirect(url_for('users.account'))
 
 @users.route('/users/<int:user_id>/recipes')
 def user_recipes(user_id):
 	user = User.query.get_or_404(user_id)
 	return render_template('home.html',
-						title=f"{user.username}'s recipes",
-						heading=f"Showing recipes by {user.username}",
-						recipes=user.recipes)
+		title=f"{user.username}'s recipes",
+		heading=f"Showing recipes by {user.username}",
+		recipes=user.recipes)
 
 @users.route('/reset_password', methods=['POST', 'GET'])
 def reset_request():
@@ -115,9 +124,12 @@ def reset_request():
 	if form.validate_on_submit():
 		user = User.query.filter_by(email=form.email.data).first()
 		send_reset_email(user)
-		flash('An email has been sent with instructions to reset your password.', 'info')
+		flash(
+			'An email has been sent with instructions to reset your password.',
+			'info')
 		return redirect(url_for('users.login'))
-	return render_template('users/reset_request.html', title='Reset Password', form=form)
+	return render_template(
+		'users/reset_request.html', title='Reset Password', form=form)
 
 @users.route('/reset_password/<token>', methods=['POST', 'GET'])
 def reset_token(token):
@@ -133,7 +145,8 @@ def reset_token(token):
 		db.session.commit()
 		flash('Your password has been updated!', 'success')
 		return redirect(url_for('users.login'))
-	return render_template('users/reset_token.html', title='Reset Password', form=form)
+	return render_template(
+		'users/reset_token.html', title='Reset Password', form=form)
 
 @users.route('/made_recipe/')
 def made_recipe():
@@ -142,11 +155,9 @@ def made_recipe():
 	if recipe in current_user.made_recipes:
 		current_user.made_recipes.remove(recipe)
 		data['added'] = False
-		print('removed')
 	else:
 		current_user.made_recipes.append(recipe)
 		data['added'] = True
-		print('added')
 
 	db.session.commit()
 	data['count'] = len(recipe.users)
