@@ -72,6 +72,15 @@
 		</div>
 	</div>
 
+	<div class="content-section">
+		<h3>Comments</h3>
+		<div class="form-group">
+			<textarea class="md-textarea form-control" id="comment" name="comment" rows="3"></textarea>
+			<input class="btn btn-primary mt-1" type="button" id="submit-comment" value="Submit">
+		</div>
+		<div id="comment-section"></div>
+	</div>
+
     <!-- Modal -->
   <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -98,8 +107,107 @@
   		button.onclick = function() {
 				cahnge_made_recipe();
   		};
+
+			response = get_comments();
+			update_comments(response);
+
+			var comment_button = document.getElementById("submit-comment");
+			comment_button.onclick = function() {
+				response = get_comments();
+				update_comments(response);
+			}
   	})();
 
+		// get comments from the server (just dummy data now)
+		// need a post_comment func
+		function get_comments() {
+			var blah = {
+				"comments": [
+					{
+						"body": "Tasty!",
+						"date": "2019-2-12",
+						"author": {
+							"name": "Erik",
+							"image": "{{ current_user.get_image_url() }}"
+						}
+					},
+					{
+						"body": "Yum!",
+						"date": "2019-2-22",
+						"author": {
+							"name": "Joe",
+							"image": "{{ current_user.get_image_url() }}"
+						}
+					},
+					{
+						"body": "Like a symphony of flavours",
+						"date": "2019-2-23",
+						"author": {
+							"name": "Bob",
+							"image": "{{ current_user.get_image_url() }}"
+						}
+					}
+				]
+			};
+			
+			comment_input = document.getElementById("comment").value;
+			if (comment_input != "") {
+				blah.comments.push({
+					"body": comment_input,
+					"date": "2019-2-23",
+					"author": {
+						"name": "{{ current_user.username }}",
+						"image": "{{ current_user.get_image_url() }}"
+					}
+				});
+			}
+
+			return blah;
+		}
+
+		// clears and appends to the comment section
+		// {comments: [{body, date, author: {name, image}}]}
+		function update_comments(response) {
+			comment_section = document.getElementById("comment-section");
+			while (comment_section.firstChild) {
+				comment_section.removeChild(comment_section.firstChild);
+			}
+
+			response.comments.forEach(comment => {
+				append_comment(comment);
+			});
+		}
+
+		// append a single comment to the comments section
+		function append_comment(comment) {
+			comment_section = document.getElementById("comment-section");
+
+			comment_div = document.createElement("div");
+			comment_div.className = "media mb-3"
+			comment_section.appendChild(comment_div);
+
+			author_img = document.createElement("img");
+			author_img.src = comment.author.image;
+			author_img.className = "mr-3 comment-profile";
+			comment_div.appendChild(author_img);
+
+			media_body = document.createElement("div");
+			media_body.className = "media-body";
+			comment_div.appendChild(media_body);
+
+			date_div = document.createElement("div");
+			date_div.className = "text-muted";
+			media_body.appendChild(date_div);
+
+			date_text = document.createTextNode(comment.author.name + " on " + comment.date);
+			date_div.appendChild(date_text);
+
+			comment_text = document.createTextNode(comment.body);
+			media_body.appendChild(comment_text);
+		}
+
+		// Update the "made-it" button when user clicks
+		// called by change_made_recipe()
   	function update_button(data) {
   		var button = document.getElementById('made-it');
   		if (data.added) {
@@ -112,17 +220,18 @@
   		}
   	}
 
+		// Send request to server to toggle user's "made-it" status for recipe
   	function cahnge_made_recipe() {
   		var xhr = new XMLHttpRequest();
   		xhr.open("GET", "{{ url_for('users.made_recipe', recipe_id=recipe.id) }}");
   		xhr.onreadystatechange = function(){
-			if(xhr.readyState === 4){
-				if(xhr.status === 200){
-					update_button(JSON.parse(xhr.responseText));
+				if(xhr.readyState === 4){
+					if(xhr.status === 200){
+						update_button(JSON.parse(xhr.responseText));
+					}
 				}
-			}
-		};
-		xhr.send();
+			};
+			xhr.send();
   	}
   </script>
 {% endblock content %}
