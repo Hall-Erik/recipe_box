@@ -33,7 +33,12 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .profile-pic {
-  width: 150px
+  width: 150px;
+}
+
+.comment-profile {
+  width: 50px;
+  border-radius: 50%;
 }
 
 .home-recipe-pic {
