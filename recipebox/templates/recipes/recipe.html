@@ -74,10 +74,16 @@
 
 	<div class="content-section">
 		<h3>Comments</h3>
-		<div class="form-group">
-			<textarea class="md-textarea form-control" id="comment" name="comment" rows="3"></textarea>
-			<input class="btn btn-primary mt-1" type="button" id="submit-comment" value="Submit">
-		</div>
+		{% if current_user.is_authenticated %}
+			<div class="form-group">
+				<textarea class="md-textarea form-control" id="comment" name="comment" rows="3"></textarea>
+				<input class="btn btn-primary mt-1" type="button" id="submit-comment" value="Submit">
+			</div>
+		{% else %}
+			<div class="alert alert-dark" role="alert">
+				<h5>Log in to post comments.</h5>
+			</div>
+		{% endif %}
 		<div id="comment-section"></div>
 	</div>
 
@@ -102,67 +108,50 @@
   </div>
 
   <script type="text/javascript">
-  	(function(){
+  	(function() {
   		var button = document.getElementById('made-it');
-  		button.onclick = function() {
-				cahnge_made_recipe();
-  		};
+			if (button != null) {
+  			button.onclick = cahnge_made_recipe;
+			}
 
-			response = get_comments();
-			update_comments(response);
+			get_comments(update_comments);
 
 			var comment_button = document.getElementById("submit-comment");
 			comment_button.onclick = function() {
-				response = get_comments();
-				update_comments(response);
+				post_comment();
 			}
   	})();
 
-		// get comments from the server (just dummy data now)
-		// need a post_comment func
-		function get_comments() {
-			var blah = {
-				"comments": [
-					{
-						"body": "Tasty!",
-						"date": "2019-2-12",
-						"author": {
-							"name": "Erik",
-							"image": "{{ current_user.get_image_url() }}"
-						}
-					},
-					{
-						"body": "Yum!",
-						"date": "2019-2-22",
-						"author": {
-							"name": "Joe",
-							"image": "{{ current_user.get_image_url() }}"
-						}
-					},
-					{
-						"body": "Like a symphony of flavours",
-						"date": "2019-2-23",
-						"author": {
-							"name": "Bob",
-							"image": "{{ current_user.get_image_url() }}"
-						}
-					}
-				]
-			};
-			
+		function post_comment() {
 			comment_input = document.getElementById("comment").value;
 			if (comment_input != "") {
-				blah.comments.push({
-					"body": comment_input,
-					"date": "2019-2-23",
-					"author": {
-						"name": "{{ current_user.username }}",
-						"image": "{{ current_user.get_image_url() }}"
+				var xhr = new XMLHttpRequest();
+				var url = "{{ url_for('recipes.create_comment', recipe_id=recipe.id) }}";
+				var params = 'body=' + comment_input;
+				xhr.open("POST", url, true);
+				xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+				xhr.onreadystatechange = function(){
+					if(xhr.readyState === 4 && xhr.status === 201) {
+						get_comments(update_comments);
 					}
-				});
+				};
+				xhr.send(params);
 			}
+		}
 
-			return blah;
+		// get comments from the server (just dummy data now)
+		// need a post_comment func
+		function get_comments(callback) {
+			var xhr = new XMLHttpRequest();
+  		xhr.open("GET", "{{ url_for('recipes.recipe_comments', recipe_id=recipe.id) }}");
+  		xhr.onreadystatechange = function(){
+				if(xhr.readyState === 4){
+					if(xhr.status === 200){
+						callback(JSON.parse(xhr.responseText));
+					}
+				}
+			};
+			xhr.send();
 		}
 
 		// clears and appends to the comment section

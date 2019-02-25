@@ -1,5 +1,13 @@
-from flask import (Blueprint, render_template, flash,
-					redirect, url_for, abort)
+from flask import (
+	Blueprint,
+	render_template,
+	flash,
+	redirect,
+	url_for,
+	abort,
+	jsonify,
+	request
+)
 from flask_login import current_user, login_required
 from recipebox import db
 from recipebox.recipes.forms import CreateRecipeForm, EditRecipeForm
@@ -36,6 +44,59 @@ def create_recipe():
 def recipe(recipe_id):
 	recipe = Recipe.query.get_or_404(recipe_id)
 	return render_template('recipes/recipe.html', title=recipe.title, recipe=recipe)
+
+comments = [
+	{
+		"body": "Tasty!",
+		"date": "2019-2-12",
+		"author": {
+			"name": "Erik",
+			"image": ""
+		}
+	},
+	{
+		"body": "Yum!",
+		"date": "2019-2-22",
+		"author": {
+			"name": "Joe",
+			"image": ""
+		}
+	},
+	{
+		"body": "Like a symphony of flavours",
+		"date": "2019-2-23",
+		"author": {
+			"name": "Bob",
+			"image": ""
+		}
+	}
+]
+
+@recipes.route('/recipe/<int:recipe_id>/comments')
+def recipe_comments(recipe_id):
+	# global comments
+	# for comment in comments:
+	# 	comment["author"]["iamge"] = current_user.get_image_url()
+
+	return jsonify({"comments": comments})
+
+@recipes.route('/recipe/<int:recipe_id>/comments/new', methods=['POST'])
+def create_comment(recipe_id):
+	if not current_user.is_authenticated:
+		return jsonify({'success': False}), 403
+	global comments
+	args = request.values
+	cmt = {
+		'body': args.get('body'),
+		'author': {
+			'name': current_user.username,
+			'image': current_user.get_image_url()
+		},
+		'recipe_id': recipe_id
+	}
+	comments.append(cmt)
+	print(comments)
+	return jsonify({'success': True}), 201
 
 @recipes.route('/recipe/<int:recipe_id>/edit', methods=['POST', 'GET'])
 @login_required
