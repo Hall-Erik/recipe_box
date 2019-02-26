@@ -20,7 +20,9 @@ class User(db.Model, UserMixin):
 	email = db.Column(db.String(120), unique=True, nullable=False)
 	image_file = db.Column(db.String(100), nullable=False, default='default_profile.jpg')
 	password = db.Column(db.String(60), nullable=False)
+	
 	recipes = db.relationship('Recipe', backref='author', lazy=True)
+	comments = db.relationship('Comment', backref='author', lazy=True)
 
 	made_recipes = db.relationship('Recipe', secondary=made_recipes, backref='users')
 
@@ -77,8 +79,9 @@ class Recipe(db.Model):
 	image_file = db.Column(db.String(100), nullable=False, default='default.png')
 	directions = db.Column(db.Text)
 	ingredients = db.Column(db.Text)
-
 	user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+
+	comments = db.relationship('Comment', backref='recipe', lazy=True)
 
 	def get_image_url(self):
 		if self.image_file == 'default.png':
@@ -88,3 +91,25 @@ class Recipe(db.Model):
 
 	def __repr__(self):
 		return f"Recipe('{self.title}', '{self.date_posted}')"
+
+class Comment(db.Model):
+	id = db.Column(db.Integer, primary_key=True)
+	body = db.Column(db.Text)
+	date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+	user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+	recipe_id = db.Column(db.Integer, db.ForeignKey('recipe.id'), nullable=False)
+
+	@property
+	def serialize(self):
+		return {
+			'id': self.id,
+			'body': self.body,
+			'date_posted': self.date_posted.strftime('%b %e, %Y'),
+			'author': {
+				'name':	self.author.username,
+				'image': self.author.get_image_url()
+			}
+		}
+
+	def __repr__(self):
+		return f"Comment('{self.body}', '{self.date_posted}')"

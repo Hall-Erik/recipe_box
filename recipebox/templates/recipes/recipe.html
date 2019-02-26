@@ -72,6 +72,7 @@
 		</div>
 	</div>
 
+	<!-- Comments -->
 	<div class="content-section">
 		<h3>Comments</h3>
 		{% if current_user.is_authenticated %}
@@ -123,16 +124,17 @@
   	})();
 
 		function post_comment() {
-			comment_input = document.getElementById("comment").value;
-			if (comment_input != "") {
+			comment_input = document.getElementById("comment");
+			if (comment_input.value != "") {
 				var xhr = new XMLHttpRequest();
 				var url = "{{ url_for('recipes.create_comment', recipe_id=recipe.id) }}";
-				var params = 'body=' + comment_input;
+				var params = 'body=' + comment_input.value;
 				xhr.open("POST", url, true);
 				xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
 				xhr.onreadystatechange = function(){
 					if(xhr.readyState === 4 && xhr.status === 201) {
 						get_comments(update_comments);
+						comment_input.value = "";
 					}
 				};
 				xhr.send(params);
@@ -155,7 +157,7 @@
 		}
 
 		// clears and appends to the comment section
-		// {comments: [{body, date, author: {name, image}}]}
+		// {comments: [{body, date_posted, author: {name, image}}]}
 		function update_comments(response) {
 			comment_section = document.getElementById("comment-section");
 			while (comment_section.firstChild) {
@@ -188,7 +190,7 @@
 			date_div.className = "text-muted";
 			media_body.appendChild(date_div);
 
-			date_text = document.createTextNode(comment.author.name + " on " + comment.date);
+			date_text = document.createTextNode(comment.author.name + " on " + comment.date_posted);
 			date_div.appendChild(date_text);
 
 			comment_text = document.createTextNode(comment.body);
