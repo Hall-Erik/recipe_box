@@ -8,10 +8,13 @@
 				<div class="form-row">
 					<div class="col-4">
 						<div class="form-group">
-							<img class="img-thumbnail profile-pic" id="preview" src="{{ profile_pic }}"/>
-							<p>Upload profile picture</p>
-							<input type="file" id="file_input"/>
+							{{ form.picture.label('Profile Picture') }}<br />
 							{{ form.picture(id="image_url", value=profile_pic) }}
+							<input class="mb-1" type="file" accept="image/*" id="file_input"/>
+							<div id="progress" class="d-none">
+								<div id="progress-bar" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
+							</div>
+							<img id="preview" class="img-thumbnail profile-pic" src="{{ profile_pic }}"/>														
 						</div>
 					</div>					
 					<div class="col-8">
@@ -101,9 +104,5 @@
             </fieldset>
 		</form>		
 	</div>
-	<script>
-		var sign_s3_url = "{{ url_for('main.sign_s3') }}";
-	</script>
-	<script src="{{ url_for('static', filename='js/load-image.all.min.js') }}"></script>
-	<script src="{{ url_for('static', filename='js/upload_image.js') }}"></script>
+	{% include 'img_scripts.html' %}
 {% endblock content %}

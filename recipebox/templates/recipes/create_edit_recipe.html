@@ -104,9 +104,5 @@
 			</div>
 		</form>		
 	</div>
-	<script>
-		var sign_s3_url = "{{ url_for('main.sign_s3') }}";
-	</script>
-	<script src="{{ url_for('static', filename='js/load-image.all.min.js') }}"></script>
-	<script src="{{ url_for('static', filename='js/upload_image.js') }}"></script>
+	{% include 'img_scripts.html' %}
 {% endblock content %}
