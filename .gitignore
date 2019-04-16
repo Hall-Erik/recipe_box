@@ -1,6 +1,7 @@
 recipebox/site.db
 *.jpg
 *.png
+venv/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
